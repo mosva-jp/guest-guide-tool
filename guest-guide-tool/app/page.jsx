@@ -7,14 +7,14 @@ const mapMd = (a) => a ? `[📍 地図](${mapUrl(a)})` : "";
 
 /* ═══════════════ Design tokens ═══════════════ */
 const C = {
-  bg: "#0b0f14", surface: "rgba(255,255,255,0.028)", surfaceHover: "rgba(255,255,255,0.045)",
-  border: "rgba(255,255,255,0.07)", borderFocus: "#3b82f6",
-  inputBg: "rgba(255,255,255,0.045)", inputBorder: "rgba(255,255,255,0.10)",
-  accent: "#3b82f6", accentSoft: "rgba(59,130,246,0.12)", accentGlow: "rgba(59,130,246,0.25)",
-  green: "#22c55e", greenSoft: "rgba(34,197,94,0.12)",
-  red: "#ef4444", redSoft: "rgba(239,68,68,0.08)",
+  bg: "#f5f7fa", surface: "#ffffff", surfaceHover: "#f0f2f5",
+  border: "#e2e6ec", borderFocus: "#3b82f6",
+  inputBg: "#f8f9fb", inputBorder: "#d5dae2",
+  accent: "#3b82f6", accentSoft: "rgba(59,130,246,0.08)", accentGlow: "rgba(59,130,246,0.2)",
+  green: "#22c55e", greenSoft: "rgba(34,197,94,0.1)",
+  red: "#ef4444", redSoft: "rgba(239,68,68,0.06)",
   amber: "#f59e0b",
-  text: "#d4dce8", dim: "#7a8da2", faint: "#4a5a6e", white: "#f0f4f8",
+  text: "#1e293b", dim: "#64748b", faint: "#94a3b8", white: "#0f172a",
 };
 
 /* ═══════════════ CSS-in-JS with focus states ═══════════════ */
@@ -23,10 +23,10 @@ const focusRing = `
     border-color: ${C.borderFocus} !important;
     box-shadow: 0 0 0 3px ${C.accentSoft} !important;
   }
-  input::placeholder, textarea::placeholder { color: ${C.faint}; }
+  input::placeholder, textarea::placeholder { color: #94a3b8; }
   *::-webkit-scrollbar { width: 6px; height: 6px; }
   *::-webkit-scrollbar-track { background: transparent; }
-  *::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  *::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 3px; }
   @media (max-width: 640px) {
     .grid2 { grid-template-columns: 1fr !important; }
     .spot-grid { grid-template-columns: 1fr !important; }
@@ -74,8 +74,8 @@ function Toggle({ id, label, enabled, toggle, children }) {
   return (
     <div style={{
       marginBottom: 12, borderRadius: 12, transition: "background 0.2s",
-      background: enabled ? "rgba(59,130,246,0.04)" : "transparent",
-      border: `1px solid ${enabled ? "rgba(59,130,246,0.1)" : "transparent"}`,
+      background: enabled ? "rgba(59,130,246,0.05)" : "transparent",
+      border: `1px solid ${enabled ? "rgba(59,130,246,0.15)" : "transparent"}`,
       padding: enabled ? "14px 16px" : "6px 0",
     }}>
       <div onClick={() => toggle(id)} style={{
@@ -84,12 +84,12 @@ function Toggle({ id, label, enabled, toggle, children }) {
       }}>
         <div style={{
           width: 42, height: 24, borderRadius: 12, position: "relative", transition: "background 0.25s",
-          background: enabled ? C.accent : "rgba(255,255,255,0.1)", flexShrink: 0,
+          background: enabled ? C.accent : "#cbd5e1", flexShrink: 0,
         }}>
           <div style={{
             width: 18, height: 18, borderRadius: 9, background: "#fff",
             position: "absolute", top: 3, left: enabled ? 21 : 3, transition: "left 0.25s cubic-bezier(0.4,0,0.2,1)",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.25)",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
           }} />
         </div>
         <span style={{ fontSize: 13.5, fontWeight: 600, color: enabled ? C.white : C.dim }}>{label}</span>
@@ -100,7 +100,7 @@ function Toggle({ id, label, enabled, toggle, children }) {
 }
 
 function Card({ children, style: ex }) {
-  return <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: "24px 26px", ...ex }}>{children}</div>;
+  return <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 16, padding: "24px 26px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)", ...ex }}>{children}</div>;
 }
 
 /* ═══════════════ Spot entry ═══════════════ */
@@ -113,11 +113,11 @@ function SpotList({ spots, setSpots, fields, addLabel = "＋ 追加" }) {
     <div>
       {spots.map((s, i) => (
         <div key={i} style={{
-          background: "rgba(255,255,255,0.02)", borderRadius: 11, padding: "14px 16px",
-          border: `1px solid rgba(255,255,255,0.04)`, marginBottom: 10,
+          background: "#f8f9fb", borderRadius: 11, padding: "14px 16px",
+          border: `1px solid #e8ecf1`, marginBottom: 10,
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.faint, background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 4 }}>#{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.dim, background: "#eef1f5", padding: "2px 8px", borderRadius: 4 }}>#{i + 1}</span>
             <Btn v="danger" onClick={() => del(i)}>✕ 削除</Btn>
           </div>
           <div className="spot-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -159,9 +159,9 @@ function ApplianceList({ items, setItems }) {
   return (
     <div>
       {items.map((it, i) => (
-        <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 11, padding: 16, marginBottom: 10, border: `1px solid rgba(255,255,255,0.04)` }}>
+        <div key={i} style={{ background: "#f8f9fb", borderRadius: 11, padding: 16, marginBottom: 10, border: "1px solid #e8ecf1" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.faint, background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 4 }}>家電 #{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.dim, background: "#eef1f5", padding: "2px 8px", borderRadius: 4 }}>家電 #{i + 1}</span>
             <Btn v="danger" onClick={() => del(i)}>✕ 削除</Btn>
           </div>
           <input style={{ ...inp, marginBottom: 8 }} placeholder="家電名（例：洗濯機、給湯器）" value={it.name} onChange={e => upd(i, "name", e.target.value)} />
@@ -184,9 +184,9 @@ function QAList({ items, setItems }) {
   return (
     <div>
       {items.map((it, i) => (
-        <div key={i} style={{ background: "rgba(255,255,255,0.02)", borderRadius: 11, padding: 16, marginBottom: 10, border: `1px solid rgba(255,255,255,0.04)` }}>
+        <div key={i} style={{ background: "#f8f9fb", borderRadius: 11, padding: 16, marginBottom: 10, border: "1px solid #e8ecf1" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.faint, background: "rgba(255,255,255,0.05)", padding: "2px 8px", borderRadius: 4 }}>Q&A #{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.dim, background: "#eef1f5", padding: "2px 8px", borderRadius: 4 }}>Q&A #{i + 1}</span>
             <Btn v="danger" onClick={() => del(i)}>✕ 削除</Btn>
           </div>
           <input style={{ ...inp, marginBottom: 8 }} placeholder="質問（Q）" value={it.q} onChange={e => upd(i, "q", e.target.value)} />
@@ -364,7 +364,164 @@ export default function App() {
   const ur = (k, v) => setRest(p => ({ ...p, [k]: v }));
 
   const allData = { basic, checkin, wifi, access, equip, rules, opt, appliances, customQA, rest, smokingAreas, sentos, laundries, convStores, sightseeing, on };
-  const handleCopy = () => { navigator.clipboard.writeText(gen(allData)).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2500); }); };
+  // Generate HTML for rich copy (Google Docs compatible)
+  const genHtml = useCallback(() => {
+    const d = allData;
+    const addr = d.basic.address;
+    const gMap = d.basic.googleMapUrl || (addr ? mapUrl(addr) : "");
+    let h = "";
+
+    const heading = (level, text) => {
+      const sizes = { 1: "24px", 2: "18px", 3: "15px" };
+      const bb = level === 2 ? "border-bottom:2px solid #e5e7eb;padding-bottom:6px;" : "";
+      return `<h${level} style="font-size:${sizes[level]};font-weight:700;margin:20px 0 8px;${bb}">${text}</h${level}>`;
+    };
+    const table = (headers, rows) => {
+      let t = '<table style="width:100%;border-collapse:collapse;margin:8px 0"><thead><tr>';
+      headers.forEach(h => { t += `<th style="text-align:left;padding:8px 10px;background:#f8fafc;border:1px solid #d1d5db;font-weight:600">${h}</th>`; });
+      t += '</tr></thead><tbody>';
+      rows.forEach(r => { t += '<tr>'; r.forEach(c => { t += `<td style="padding:8px 10px;border:1px solid #d1d5db">${c}</td>`; }); t += '</tr>'; });
+      t += '</tbody></table>';
+      return t;
+    };
+    const link = (text, url) => url ? `<a href="${url}">${text}</a>` : "";
+    const hr = '<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">';
+    const ul = (items) => '<ul style="margin:4px 0 8px 20px">' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+    const spotRows = (spots, withMap) => spots.filter(s => s.name).map(s => {
+      const addrCell = s.address ? `${s.address} ${link("📍地図", mapUrl(s.address))}` : "";
+      const base = [s.name, addrCell];
+      if (s.hours !== undefined) base.push(s.hours || "");
+      if (s.extra !== undefined) base.push(s.extra || "");
+      if (s.detail !== undefined) base.push(s.detail || "");
+      return base;
+    });
+
+    // Title
+    h += heading(1, `🏠 ${d.basic.facilityName || "【施設名】"} ゲストガイド`) + hr;
+
+    // 基本情報
+    h += heading(2, "📋 基本情報");
+    const basicRows = [
+      ["施設名", d.basic.facilityName], ["住所", addr],
+    ];
+    if (gMap) basicRows.push(["Google Map", link("📍 地図を開く", gMap)]);
+    basicRows.push(["建物タイプ", d.basic.buildingType], ["最大宿泊人数", d.basic.maxGuests], ["ベッド数", d.basic.beds]);
+    h += table(["項目", "詳細"], basicRows) + hr;
+
+    // チェックイン
+    h += heading(2, "🔑 チェックイン・チェックアウト");
+    const ciRows = [["チェックイン時間", d.checkin.checkinTime], ["チェックアウト時間", d.checkin.checkoutTime]];
+    if (d.checkin.lateCheckin) ciRows.push(["深夜チェックイン", d.checkin.lateCheckin]);
+    if (d.checkin.earlyCheckin) ciRows.push(["アーリーチェックイン", d.checkin.earlyCheckin]);
+    if (d.checkin.lateCheckout) ciRows.push(["レイトチェックアウト", d.checkin.lateCheckout]);
+    h += table(["項目", "詳細"], ciRows);
+    h += heading(3, "🔐 鍵について");
+    const keyItems = [`<b>鍵の受け渡し方法</b>: ${d.checkin.keyMethod}`];
+    if (d.checkin.keyCode) keyItems.push(`<b>鍵の暗証番号</b>: ${d.checkin.keyCode}`);
+    keyItems.push(`<b>鍵紛失時の請求額</b>: ${d.checkin.keyLostFee}`);
+    h += ul(keyItems);
+    h += heading(3, "🚪 チェックアウト時のお願い");
+    h += '<ol style="margin:4px 0 8px 20px"><li>エアコンをオフにしてください</li><li>電気を消してください</li><li>鍵をロックしてご退出ください</li></ol>' + hr;
+
+    // Wi-Fi
+    h += heading(2, "🌐 Wi-Fi");
+    const wifiRows = [["SSID", d.wifi.ssid], ["パスワード", d.wifi.password]];
+    if (d.wifi.speed) wifiRows.push(["速度", d.wifi.speed]);
+    h += table(["項目", "詳細"], wifiRows) + hr;
+
+    // アクセス
+    h += heading(2, "🚃 アクセス");
+    if (d.on.narita) { h += heading(3, "✈️ 成田空港から") + ul([d.access.fromNarita, `所要時間：${d.access.naritaTime}`, `料金目安：${d.access.naritaCost}`]); }
+    if (d.on.haneda) { h += heading(3, "✈️ 羽田空港から") + ul([d.access.fromHaneda, `所要時間：${d.access.hanedaTime}`, `料金目安：${d.access.hanedaCost}`]); }
+    h += heading(3, "🚉 最寄駅");
+    const stItems = [`<b>最寄駅</b>: ${d.access.nearestStation}`, `<b>徒歩</b>: ${d.access.walkMinutes}`];
+    if (d.access.nearestStation && addr) stItems.push(`<b>ルート</b>: ${link("📍 駅→施設", `https://www.google.com/maps/dir/${encodeURIComponent(d.access.nearestStation)}/${encodeURIComponent(addr)}`)}`);
+    h += ul(stItems) + hr;
+
+    // 設備
+    h += heading(2, "🛋 設備・アメニティ");
+    h += heading(3, "設備");
+    h += ul(d.equip.facilities.split(/[,、\n]/).map(s => s.trim()).filter(Boolean));
+    h += heading(3, "アメニティ");
+    const amenItems = d.equip.amenities.split(/[,、\n]/).map(s => s.trim()).filter(Boolean);
+    amenItems.push(`歯ブラシ：${d.equip.toothbrush}`);
+    h += ul(amenItems);
+    if (d.equip.washerDryer) h += `<p><b>洗濯機・乾燥機</b>: ${d.equip.washerDryer}</p>`;
+    h += hr;
+
+    // 家電
+    const va = d.appliances.filter(a => a.name);
+    if (va.length) {
+      h += heading(2, "📖 家電の操作方法");
+      va.forEach(a => {
+        h += heading(3, a.name);
+        h += `<p style="white-space:pre-wrap">${a.howTo}</p>`;
+        if (a.driveLink) h += `<p>📷 操作写真: ${link(a.driveLink, a.driveLink)}</p>`;
+      });
+      h += hr;
+    }
+
+    if (d.on.pet) { h += heading(2, "🐾 ペット") + `<p>${d.opt.petPolicy}</p>` + hr; }
+    h += heading(2, "🗑 ゴミの捨て方") + `<p style="white-space:pre-wrap">${d.rules.garbageRules}</p>` + hr;
+    if (d.on.cleaning) { h += heading(2, "🧹 清掃") + ul([`<b>滞在中の追加清掃</b>: ${d.opt.cleaningFee}`]) + hr; }
+    if (d.on.luggage) { h += heading(2, "🧳 荷物預かり") + `<p>${d.opt.luggageStorage}</p>` + hr; }
+    if (d.on.taxi) { h += heading(2, "🚕 タクシー") + `<p>${d.opt.taxiInfo}</p>` + hr; }
+
+    // 飲食店
+    const RC = [["ramen","🍜 ラーメン"],["sushi","🍣 寿司"],["vegan","🌱 ヴィーガン対応"],["smokingRest","🚬 喫煙可能な飲食店"],["lateNight","🌙 夜遅くまで営業"],["morning","☀️ モーニング"],["lunch","🍱 ランチ"],["otherRest","⭐ その他おすすめ"]];
+    if (RC.some(([k]) => d.on[k] && d.rest[k]?.some(s => s.name))) {
+      h += heading(2, "🍽 周辺の飲食店");
+      RC.forEach(([k, t]) => {
+        if (d.on[k]) {
+          const rows = spotRows(d.rest[k] || []);
+          if (rows.length) { h += heading(3, t) + table(["店名", "住所 / Google Map", "営業時間", "詳細"], rows); }
+        }
+      });
+      h += hr;
+    }
+
+    if (d.on.smokingArea) { const rows = d.smokingAreas.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.detail || ""]); if (rows.length) h += heading(2, "🚬 喫煙可能場所") + table(["場所名", "住所 / Google Map", "詳細"], rows) + hr; }
+    if (d.on.sento) { const rows = d.sentos.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "♨️ 銭湯") + table(["施設名", "住所 / Google Map", "営業時間", "料金", "詳細"], rows) + hr; }
+    if (d.on.laundry) { const rows = d.laundries.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "👕 コインランドリー") + table(["施設名", "住所 / Google Map", "営業時間", "料金目安", "詳細"], rows) + hr; }
+
+    // FAQ
+    h += heading(2, "❓ よくある質問（FAQ）");
+    const faqs = [
+      ["支払いリクエスト（追加請求）はどこで確認できますか？", '以下のURLから「問題解決センター」をクリックしてご確認ください。<br>🔗 <a href="https://www.airbnb.jp/help/article/3590">https://www.airbnb.jp/help/article/3590</a>'],
+      ["日本に入国するためのデータを入力するために電話番号が必要です。", "以下の番号をご利用ください：<br>📞 090-4400-9698"],
+      ["チェックアウト時、エアコンをオフにする必要がありますか？", "はい。エアコンをオフにして電気を切り、鍵をロックしてご退出ください。"],
+    ];
+    d.customQA.filter(qa => qa.q).forEach(qa => faqs.push([qa.q, qa.a]));
+    faqs.forEach(([q, a]) => { h += heading(3, `Q. ${q}`) + `<p><b>A.</b> ${a}</p>`; });
+    h += hr;
+
+    // 追加情報
+    const ex = [];
+    if (d.on.emergency && d.opt.emergency) ex.push(heading(3, "🏥 緊急連絡先") + `<p>${d.opt.emergency}</p>` + ul(["警察: 110", "救急: 119"]));
+    if (d.on.convenience) { const rows = spotRows(d.convStores); if (rows.length) ex.push(heading(3, "🏪 コンビニ・スーパー") + table(["店名", "住所 / Google Map", "営業時間", "詳細"], rows)); }
+    if (d.on.pharmacy && d.opt.pharmacy) ex.push(heading(3, "💊 薬局") + `<p>${d.opt.pharmacy}</p>`);
+    if (d.on.atm && d.opt.atm) ex.push(heading(3, "🏧 ATM・両替所") + `<p>${d.opt.atm}</p>`);
+    if (d.on.sightseeing) { const rows = spotRows(d.sightseeing); if (rows.length) ex.push(heading(3, "🚌 観光スポット") + table(["スポット名", "住所 / Google Map", "営業時間", "詳細"], rows)); }
+    if (d.on.houseRules && d.opt.houseRules) ex.push(heading(3, "🎌 ハウスルール") + `<p>${d.opt.houseRules}</p>`);
+    if (d.on.quietHours && d.opt.quietHours) ex.push(heading(3, "🔇 静粛時間") + `<p>${d.opt.quietHours}</p>`);
+    if (ex.length) { h += heading(2, "💡 追加情報") + ex.join(hr) + hr; }
+
+    h += `<p style="color:#94a3b8;font-size:12px"><em>最終更新日: ${new Date().toLocaleDateString("ja-JP")} / 管理: MOSVA</em></p>`;
+    return h;
+  }, [allData]);
+
+  const handleCopy = () => {
+    const htmlContent = genHtml();
+    const blob = new Blob([htmlContent], { type: "text/html" });
+    const item = new ClipboardItem({
+      "text/html": blob,
+      "text/plain": new Blob([gen(allData)], { type: "text/plain" }),
+    });
+    navigator.clipboard.write([item]).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
 
   // Step completion calc
   const stepCompletion = useMemo(() => {
@@ -549,11 +706,11 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: `linear-gradient(165deg, ${C.bg} 0%, #131b28 40%, ${C.bg} 100%)`, fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", color: C.text }}>
+    <div style={{ minHeight: "100vh", background: C.bg, fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", color: C.text }}>
       <style>{focusRing}</style>
 
       {/* Header */}
-      <div style={{ background: "rgba(11,15,20,0.94)", borderBottom: `1px solid ${C.border}`, padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, backdropFilter: "blur(20px)" }}>
+      <div style={{ background: "rgba(255,255,255,0.95)", borderBottom: `1px solid ${C.border}`, padding: "12px 16px", position: "sticky", top: 0, zIndex: 100, backdropFilter: "blur(20px)" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 34, height: 34, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, #3b82f6, #8b5cf6)", fontSize: 16 }}>🏠</div>
@@ -562,7 +719,7 @@ export default function App() {
               <div style={{ fontSize: 10, color: C.faint, letterSpacing: "0.04em" }}>MOSVA</div>
             </div>
           </div>
-          <div style={{ display: "flex", background: "rgba(255,255,255,0.05)", borderRadius: 10, padding: 3 }}>
+          <div style={{ display: "flex", background: "#eef1f5", borderRadius: 10, padding: 3 }}>
             {[["form", "✏️ 入力"], ["preview", "👁 プレビュー"]].map(([v, l]) => (
               <button key={v} onClick={() => setView(v)} style={{
                 padding: "7px 16px", borderRadius: 8, border: "none", fontSize: 12.5, fontWeight: 600,
@@ -588,7 +745,7 @@ export default function App() {
                     padding: "8px 14px", borderRadius: 9, border: "none", cursor: "pointer",
                     fontSize: 12, fontWeight: 600, whiteSpace: "nowrap", fontFamily: "inherit",
                     transition: "all 0.2s", position: "relative",
-                    background: step === i ? C.accent : "rgba(255,255,255,0.04)",
+                    background: step === i ? C.accent : "#eef1f5",
                     color: step === i ? "#fff" : done ? C.green : C.faint,
                     boxShadow: step === i ? `0 2px 12px ${C.accentGlow}` : "none",
                   }}>
@@ -605,7 +762,7 @@ export default function App() {
               {STEPS.map((_, i) => (
                 <div key={i} style={{
                   flex: 1, height: 3, borderRadius: 2, transition: "all 0.4s",
-                  background: i < step ? C.accent : i === step ? `linear-gradient(90deg, ${C.accent}, ${C.accent}88)` : "rgba(255,255,255,0.06)",
+                  background: i < step ? C.accent : i === step ? `linear-gradient(90deg, ${C.accent}, ${C.accent}88)` : "#e2e6ec",
                 }} />
               ))}
             </div>
@@ -629,7 +786,7 @@ export default function App() {
                   {STEPS.map((_, i) => (
                     <div key={i} onClick={() => setStep(i)} style={{
                       width: 8, height: 8, borderRadius: 4, cursor: "pointer", transition: "all 0.2s",
-                      background: i === step ? C.accent : i < step ? C.dim : "rgba(255,255,255,0.1)",
+                      background: i === step ? C.accent : i < step ? C.dim : "#d5dae2",
                     }} />
                   ))}
                 </div>
@@ -656,7 +813,7 @@ export default function App() {
 
             <Card style={{ background: C.accentSoft, border: `1px solid rgba(59,130,246,0.12)`, marginBottom: 14, padding: "12px 18px" }}>
               <div style={{ fontSize: 12.5, color: C.dim, lineHeight: 1.7 }}>
-                💡 上のボタンでコピーし、Googleドキュメントに貼り付けてください。
+                💡 上のボタンでコピーし、Googleドキュメントに貼り付けてください。見出し・表・リンクがそのまま反映されます。
               </div>
             </Card>
 
