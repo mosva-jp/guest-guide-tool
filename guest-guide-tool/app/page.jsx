@@ -300,8 +300,8 @@ function MdPreview({ text }) {
     let h = text
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
       .replace(/^# (.+)$/gm, '<h1 style="font-size:22px;font-weight:800;margin:0 0 8px;color:#111">$1</h1>')
-      .replace(/^## (.+)$/gm, '<h2 style="font-size:17px;font-weight:700;margin:24px 0 8px;color:#1a1a2e;padding-bottom:6px;border-bottom:2px solid #e5e7eb">$2</h2>')
-      .replace(/^### (.+)$/gm, '<h3 style="font-size:14.5px;font-weight:700;margin:18px 0 6px;color:#1a1a2e">$3</h3>')
+      .replace(/^## (.+)$/gm, '<h2 style="font-size:17px;font-weight:700;margin:24px 0 8px;color:#1a1a2e;padding-bottom:6px;border-bottom:2px solid #e5e7eb">$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3 style="font-size:14.5px;font-weight:700;margin:18px 0 6px;color:#1a1a2e">$1</h3>')
       .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">')
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:#3b82f6;text-decoration:none" target="_blank">$1</a>')
