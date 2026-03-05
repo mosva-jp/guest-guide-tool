@@ -384,11 +384,11 @@ export default function App() {
       t += '</tbody></table>';
       return t;
     };
-    const link = (text, url) => url ? `<a href="${url}">${text}</a>` : "";
+    const link = (text, url) => url ? url : "";
     const hr = '<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">';
     const ul = (items) => '<ul style="margin:4px 0 8px 20px">' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
     const spotRows = (spots, withMap) => spots.filter(s => s.name).map(s => {
-      const addrCell = s.address ? `${s.address} ${link("📍地図", mapUrl(s.address))}` : "";
+      const addrCell = s.address ? `${s.address}　${mapUrl(s.address)}` : "";
       const base = [s.name, addrCell];
       if (s.hours !== undefined) base.push(s.hours || "");
       if (s.extra !== undefined) base.push(s.extra || "");
@@ -404,7 +404,7 @@ export default function App() {
     const basicRows = [
       ["施設名", d.basic.facilityName], ["住所", addr],
     ];
-    if (gMap) basicRows.push(["Google Map", link("📍 地図を開く", gMap)]);
+    if (gMap) basicRows.push(["Google Map", gMap]);
     basicRows.push(["建物タイプ", d.basic.buildingType], ["最大宿泊人数", d.basic.maxGuests], ["ベッド数", d.basic.beds]);
     h += table(["項目", "詳細"], basicRows) + hr;
 
@@ -435,7 +435,7 @@ export default function App() {
     if (d.on.haneda) { h += heading(3, "✈️ 羽田空港から") + ul([d.access.fromHaneda, `所要時間：${d.access.hanedaTime}`, `料金目安：${d.access.hanedaCost}`]); }
     h += heading(3, "🚉 最寄駅");
     const stItems = [`<b>最寄駅</b>: ${d.access.nearestStation}`, `<b>徒歩</b>: ${d.access.walkMinutes}`];
-    if (d.access.nearestStation && addr) stItems.push(`<b>ルート</b>: ${link("📍 駅→施設", `https://www.google.com/maps/dir/${encodeURIComponent(d.access.nearestStation)}/${encodeURIComponent(addr)}`)}`);
+    if (d.access.nearestStation && addr) stItems.push(`<b>ルート</b>: https://www.google.com/maps/dir/${encodeURIComponent(d.access.nearestStation)}/${encodeURIComponent(addr)}`);;
     h += ul(stItems) + hr;
 
     // 設備
@@ -456,7 +456,7 @@ export default function App() {
       va.forEach(a => {
         h += heading(3, a.name);
         h += `<p style="white-space:pre-wrap">${a.howTo}</p>`;
-        if (a.driveLink) h += `<p>📷 操作写真: ${link(a.driveLink, a.driveLink)}</p>`;
+        if (a.driveLink) h += `<p>📷 操作写真: ${a.driveLink}</p>`;
       });
       h += hr;
     }
@@ -480,14 +480,14 @@ export default function App() {
       h += hr;
     }
 
-    if (d.on.smokingArea) { const rows = d.smokingAreas.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.detail || ""]); if (rows.length) h += heading(2, "🚬 喫煙可能場所") + table(["場所名", "住所 / Google Map", "詳細"], rows) + hr; }
-    if (d.on.sento) { const rows = d.sentos.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "♨️ 銭湯") + table(["施設名", "住所 / Google Map", "営業時間", "料金", "詳細"], rows) + hr; }
-    if (d.on.laundry) { const rows = d.laundries.filter(s => s.name).map(s => [s.name, s.address ? `${s.address} ${link("📍", mapUrl(s.address))}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "👕 コインランドリー") + table(["施設名", "住所 / Google Map", "営業時間", "料金目安", "詳細"], rows) + hr; }
+    if (d.on.smokingArea) { const rows = d.smokingAreas.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.detail || ""]); if (rows.length) h += heading(2, "🚬 喫煙可能場所") + table(["場所名", "住所 / Google Map", "詳細"], rows) + hr; }
+    if (d.on.sento) { const rows = d.sentos.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "♨️ 銭湯") + table(["施設名", "住所 / Google Map", "営業時間", "料金", "詳細"], rows) + hr; }
+    if (d.on.laundry) { const rows = d.laundries.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "👕 コインランドリー") + table(["施設名", "住所 / Google Map", "営業時間", "料金目安", "詳細"], rows) + hr; }
 
     // FAQ
     h += heading(2, "❓ よくある質問（FAQ）");
     const faqs = [
-      ["支払いリクエスト（追加請求）はどこで確認できますか？", '以下のURLから「問題解決センター」をクリックしてご確認ください。<br>🔗 <a href="https://www.airbnb.jp/help/article/3590">https://www.airbnb.jp/help/article/3590</a>'],
+      ["支払いリクエスト（追加請求）はどこで確認できますか？", '以下のURLから「問題解決センター」をクリックしてご確認ください。<br>🔗 https://www.airbnb.jp/help/article/3590'],
       ["日本に入国するためのデータを入力するために電話番号が必要です。", "以下の番号をご利用ください：<br>📞 090-4400-9698"],
       ["チェックアウト時、エアコンをオフにする必要がありますか？", "はい。エアコンをオフにして電気を切り、鍵をロックしてご退出ください。"],
     ];
