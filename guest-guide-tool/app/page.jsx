@@ -136,18 +136,21 @@ function SpotList({ spots, setSpots, fields, addLabel = "＋ 追加" }) {
 }
 
 const SHOP_F = [
-  { key: "name", ph: "店名・施設名" }, { key: "address", ph: "住所（Mapリンク自動生成）" },
-  { key: "hours", ph: "営業時間" }, { key: "detail", ph: "詳細・特徴", full: true },
+  { key: "name", ph: "店名・施設名" }, { key: "address", ph: "住所" },
+  { key: "hours", ph: "営業時間" }, { key: "mapUrl", ph: "Google Map リンク" },
+  { key: "detail", ph: "詳細・特徴", full: true },
 ];
-const SIMPLE_F = [{ key: "name", ph: "場所名" }, { key: "address", ph: "住所" }, { key: "detail", ph: "詳細", full: true }];
+const SIMPLE_F = [{ key: "name", ph: "場所名" }, { key: "address", ph: "住所" }, { key: "mapUrl", ph: "Google Map リンク" }, { key: "detail", ph: "詳細", full: true }];
 const SENTO_F = [
   { key: "name", ph: "施設名" }, { key: "address", ph: "住所" },
   { key: "hours", ph: "営業時間" }, { key: "extra", ph: "料金（例：¥520）" },
+  { key: "mapUrl", ph: "Google Map リンク", full: true },
   { key: "detail", ph: "詳細（サウナあり等）", full: true },
 ];
 const LAUNDRY_F = [
   { key: "name", ph: "施設名" }, { key: "address", ph: "住所" },
   { key: "hours", ph: "営業時間" }, { key: "extra", ph: "料金目安" },
+  { key: "mapUrl", ph: "Google Map リンク", full: true },
   { key: "detail", ph: "詳細", full: true },
 ];
 
@@ -205,7 +208,10 @@ function spotsTable(spots, cols) {
   const h = cols.map(c => c.label);
   let t = `| ${h.join(" | ")} |\n|${h.map(() => "------").join("|")}|\n`;
   valid.forEach(s => {
-    const cells = cols.map(c => c.key === "address" ? `${s.address}　${mapMd(s.address)}` : (s[c.key] || ""));
+    const cells = cols.map(c => {
+      if (c.key === "address") return s.mapUrl ? `${s.address}　${s.mapUrl}` : s.address;
+      return s[c.key] || "";
+    });
     t += `| ${cells.join(" | ")} |\n`;
   });
   return t;
@@ -213,7 +219,7 @@ function spotsTable(spots, cols) {
 
 function gen(d) {
   const addr = d.basic.address;
-  const gMap = d.basic.googleMapUrl || (addr ? mapUrl(addr) : "");
+  const gMap = d.basic.googleMapUrl;
   let m = `# 🏠 ${d.basic.facilityName || "【施設名】"} ゲストガイド\n\n---\n\n`;
 
   m += `## 📋 基本情報\n\n| 項目 | 詳細 |\n|------|------|\n`;
@@ -368,7 +374,7 @@ export default function App() {
   const genHtml = useCallback(() => {
     const d = allData;
     const addr = d.basic.address;
-    const gMap = d.basic.googleMapUrl || (addr ? mapUrl(addr) : "");
+    const gMap = d.basic.googleMapUrl;
     let h = "";
 
     const heading = (level, text) => {
@@ -388,7 +394,7 @@ export default function App() {
     const hr = '<hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">';
     const ul = (items) => '<ul style="margin:4px 0 8px 20px">' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
     const spotRows = (spots, withMap) => spots.filter(s => s.name).map(s => {
-      const addrCell = s.address ? `${s.address}　${mapUrl(s.address)}` : "";
+      const addrCell = s.mapUrl ? `${s.address}　${s.mapUrl}` : (s.address || "");
       const base = [s.name, addrCell];
       if (s.hours !== undefined) base.push(s.hours || "");
       if (s.extra !== undefined) base.push(s.extra || "");
@@ -480,9 +486,9 @@ export default function App() {
       h += hr;
     }
 
-    if (d.on.smokingArea) { const rows = d.smokingAreas.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.detail || ""]); if (rows.length) h += heading(2, "🚬 喫煙可能場所") + table(["場所名", "住所 / Google Map", "詳細"], rows) + hr; }
-    if (d.on.sento) { const rows = d.sentos.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "♨️ 銭湯") + table(["施設名", "住所 / Google Map", "営業時間", "料金", "詳細"], rows) + hr; }
-    if (d.on.laundry) { const rows = d.laundries.filter(s => s.name).map(s => [s.name, s.address ? `${s.address}　${mapUrl(s.address)}` : "", s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "👕 コインランドリー") + table(["施設名", "住所 / Google Map", "営業時間", "料金目安", "詳細"], rows) + hr; }
+    if (d.on.smokingArea) { const rows = d.smokingAreas.filter(s => s.name).map(s => [s.name, s.mapUrl ? `${s.address}　${s.mapUrl}` : (s.address || ""), s.detail || ""]); if (rows.length) h += heading(2, "🚬 喫煙可能場所") + table(["場所名", "住所 / Google Map", "詳細"], rows) + hr; }
+    if (d.on.sento) { const rows = d.sentos.filter(s => s.name).map(s => [s.name, s.mapUrl ? `${s.address}　${s.mapUrl}` : (s.address || ""), s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "♨️ 銭湯") + table(["施設名", "住所 / Google Map", "営業時間", "料金", "詳細"], rows) + hr; }
+    if (d.on.laundry) { const rows = d.laundries.filter(s => s.name).map(s => [s.name, s.mapUrl ? `${s.address}　${s.mapUrl}` : (s.address || ""), s.hours||"", s.extra||"", s.detail||""]); if (rows.length) h += heading(2, "👕 コインランドリー") + table(["施設名", "住所 / Google Map", "営業時間", "料金目安", "詳細"], rows) + hr; }
 
     // FAQ
     h += heading(2, "❓ よくある質問（FAQ）");
@@ -563,7 +569,7 @@ export default function App() {
         <div style={gap}>
           <Field label="施設名" required><input style={inp} value={basic.facilityName} onChange={e => ub("facilityName", e.target.value)} placeholder="ZenAbode Kamata 303" /></Field>
           <Field label="住所" required><input style={inp} value={basic.address} onChange={e => ub("address", e.target.value)} placeholder="東京都大田区蒲田5-1-1" /></Field>
-          <Field label="Google Map リンク" hint={!basic.googleMapUrl && basic.address ? "💡 未入力の場合は住所から自動生成されます" : "Google Mapで「共有 → リンクをコピー」したURLを貼り付け"}>
+          <Field label="Google Map リンク" hint="Google Mapで「共有 → リンクをコピー」したURLを貼り付け">
             <input style={inp} value={basic.googleMapUrl} onChange={e => ub("googleMapUrl", e.target.value)} placeholder="https://maps.app.goo.gl/xxxxx" />
           </Field>
           <div className={grid2} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
@@ -659,7 +665,7 @@ export default function App() {
       );
       case 7: return (
         <div style={gap}>
-          <p style={{ fontSize: 13, color: C.dim, marginBottom: 4, lineHeight: 1.65 }}>必要なカテゴリをONにしてお店を追加。<br />住所入力でGoogle Mapリンク自動生成。</p>
+          <p style={{ fontSize: 13, color: C.dim, marginBottom: 4, lineHeight: 1.65 }}>必要なカテゴリをONにしてお店を追加。<br />Google Mapリンクは各店舗に手動で入力してください。</p>
           {[["ramen","🍜 ラーメン"],["sushi","🍣 寿司"],["vegan","🌱 ヴィーガン対応"],["smokingRest","🚬 喫煙可能な飲食店"],["lateNight","🌙 夜遅くまで営業"],["morning","☀️ モーニング"],["lunch","🍱 ランチ"],["otherRest","⭐ その他おすすめ"]].map(([k, l]) => (
             <Toggle key={k} id={k} label={l} enabled={on[k]} toggle={tog}>
               <SpotList spots={rest[k]} setSpots={v => ur(k, v)} fields={SHOP_F} addLabel={`＋ ${l.split(" ").pop()}を追加`} />
